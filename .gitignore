@@ -1,0 +1,14 @@
+*.egg-info/
+dist/
+build/
+__pycache__/
+*.pyc
+.pytest_cache/
+mempal.yaml
+
+# Never commit LinkedIn drafts to public repo
+LINKEDIN_*.md
+LINKEDIN_*.docx
+*_DRAFT.md
+*_DRAFT.docx
+.DS_Store

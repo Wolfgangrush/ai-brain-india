@@ -1,0 +1,49 @@
+description = "📦 Batch-generate Word (.docx) files for every Markdown (.md) draft in a matter folder. Use this at end of session when lite mode was on during drafting. Same pandoc, same fidelity — one batched run instead of per-draft heat. Skips .docx files that are already up-to-date with their .md."
+
+prompt = """
+# 📦 Finalize — India AI Brain
+
+The advocate said:
+
+\"\"\"
+{{args}}
+\"\"\"
+
+You are batch-generating `.docx` files for every `.md` draft in a matter folder. This is the companion to lite mode — drafts saved as `.md` during the session, then finalized into `.docx` at the end with one batched pandoc run.
+
+## Step 1 — Identify the matter folder
+
+From the advocate's message, extract the matter folder path. Common shapes:
+- `~/Desktop/<firm>/<matter-folder>/`
+- A relative path from current working directory
+- A descriptive name like "the X matter" — ask the advocate for the exact path if unclear
+
+If the path is unclear, ask:
+
+> Which matter folder? (paste the full path, or e.g. `~/Desktop/<firm>/<matter-folder>/`)
+
+## Step 2 — Run the batched conversion
+
+!{ailawfirm-india finalize "{{matter_path}}"}
+
+(Substitute `{{matter_path}}` with the actual folder path from Step 1.)
+
+## Step 3 — Report the result
+
+The finalize command walks the matter folder recursively, finds every `.md` file, and runs `nice`'d pandoc to generate the paired `.docx`. Files that already have an up-to-date `.docx` are skipped.
+
+Report to the advocate:
+
+> 📦 Finalize complete:
+>   - X drafts converted to .docx
+>   - Y drafts already up-to-date (skipped)
+>   - Z drafts failed (if any — flag the filenames)
+
+If any conversions failed, surface the filenames and recommend the advocate check the .md for syntax issues, then re-run finalize.
+
+## Why batched finalize exists
+
+Per-draft `.docx` generation runs pandoc as a subprocess every drafting turn. On a fanless 8GB Mac (M1/M2 Air), that's the largest single CPU consumer per turn and the primary cause of thermal throttling during long drafting sessions.
+
+Batched finalize at end of session produces bit-identical `.docx` (pandoc is deterministic for the same input) with one CPU burst instead of dozens of per-keystroke spikes. Quality is unchanged.
+"""

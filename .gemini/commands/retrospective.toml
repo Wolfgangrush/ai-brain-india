@@ -1,0 +1,87 @@
+description = "End-of-session save discipline for India AI Brain. Runs 2-pass leak-check (Rule 6) + saves session learning so the firm gets smarter every session."
+
+prompt = """
+# /retrospective — India AI Brain · End-of-Session Save Discipline
+
+Save what the firm learned this session. Runs at session end. The firm accumulates knowledge across sessions without leaking personal or client context.
+
+## Step 1 — Collect session summary (read this conversation)
+
+Scan the current conversation for:
+- Which specialists were invoked (Receptionist, Matter Manager, Citation Clerk, Court Registrar, Drafting Assistant, Compliance Officer, Deadline Tracker)
+- Which legal domains were touched (criminal · civil · constitutional · corporate · DPDP · BCI compliance · IP · matrimonial · service · labour · tax)
+- Which courts or jurisdictions were referenced
+- Citations validated (AIR / SCC / SCC OnLine)
+- Compliance flags raised (Rule 36 / DPDP)
+- Any errors or blockers encountered
+
+## Step 2 — Run 2-Pass Leak-Check (Rule 6 — execute BEFORE any save)
+
+### Pass 1 — Internal-shorthand codes + internal paths
+!{grep -rniE '\\b[A-Z]{2,5}\\b' --include="*.md" --include="*.json" --include="*.txt" . 2>/dev/null | grep -vE '\\b(USA|UK|EU|UAE|HC|SC|API|JSON|MIT|MCP|CSV|PDF|XML|HTML|HTTP|URL|ABN|TFN|GST|VAT|CEO|CFO|CIO|MD|QC|JD|LLM|LLB|BSc|MBA|GDP|GDPR|CCPA|DPDP|AI|ML|NLP|CLI|IDE|SDK|README|CI|CD|PR|RFC|ETA|EOD|TBD|FYI|NB|AM|PM|BNS|BNSS|BSA|CPC|CrPC|IPC|DRT|NCLT|NCDRC|NCLAT|DRAT|BCI|SCC|AIR|TOML|YAML)\\b' | head -20 || echo "Pass 1: 0 hits — CLEAN"}
+
+!{grep -rniE '~/\\.[a-z]+/' --include="*.md" --include="*.json" . 2>/dev/null | head -10 || echo "Pass 1 paths: 0 hits — CLEAN"}
+
+### Pass 2 — Personal-vs-business markers + client-data residue
+Scan conversation for accidental client identifiers (Aadhaar = 12-digit number · PAN = ABCDE1234F format · GSTIN = 15-char format · phone = 10-digit Indian mobile). If any leaked into our outputs, **STOP and flag**.
+
+**Expected: zero hits across both passes.** Any hit = STOP. Do not save. Flag for manual review.
+
+## Step 3 — If both passes clean, write session summary
+
+!{mkdir -p ~/.ailawfirm-india/sessions && echo "Session directory ready"}
+
+Compose the session summary and write it:
+
+!{TIMESTAMP=$(date +"%Y-%m-%d_%H%M") && SESSION_FILE="$HOME/.ailawfirm-india/sessions/session_${TIMESTAMP}_gemini.md" && echo "Will write to: $SESSION_FILE"}
+
+Use the Write tool to save a markdown file in `~/.ailawfirm-india/sessions/` with this shape:
+
+```markdown
+# Session — YYYY-MM-DD HH:MM (Gemini brain)
+- Specialists used: [list]
+- Domains: [list]
+- Courts referenced: [list]
+- Citations validated: [list — formats only, not the underlying case names if client-linked]
+- Compliance flags raised: [count + types]
+- Key outcomes / learnings: [2-3 short lines — jurisdiction-context only, no client facts]
+- Leak-check: PASS (2-pass, Rule 6 · Gemini)
+```
+
+## Step 4 — Display save confirmation
+
+```
+🧠 India AI Brain — session saved (Gemini brain).
+   Leak-check: ✅ PASS (Pass 1: 0 shorthand, 0 paths | Pass 2: 0 personal-build, 0 client-data residue)
+   Next session starts smarter.
+```
+
+## Output Format
+
+```markdown
+## /retrospective — India AI Brain · Session Save (Gemini)
+
+**Session:** YYYY-MM-DD HH:MM
+**Specialists active:** [N]
+**Domains touched:** [list]
+**Leak-check:** ✅ PASS / ❌ BLOCKED
+
+[If PASS: "Session learning saved to ~/.ailawfirm-india/sessions/. Firm knowledge base updated."]
+[If BLOCKED: "Leak detected. Session NOT saved. Review flagged content above before re-running /retrospective."]
+```
+
+## Anti-Pollution Rules (DO NOT BREAK)
+- Never reference user-home dot-directories of a developer's machine
+- Never use entity-aliasing codes from any other system
+- Never include real client names, PAN, Aadhaar, GSTIN, phone, email, or case-specific facts in the saved summary
+- Never reference external project-architecture names not tied to this firm
+- Never reference the publisher's personal builds
+- The publisher credit line in README.md is the sole allowed reference — it is public-facing attribution, not a leak
+
+## What this command does NOT do
+- Does NOT read or write to the local memory layer or any other personal data store
+- Does NOT access personal diary, knowledge graph, or self-assessment data
+- Does NOT touch any other firm's directory
+- Does NOT auto-save without passing both leak-check passes
+- Does NOT save client facts — only jurisdiction-context learnings
+"""

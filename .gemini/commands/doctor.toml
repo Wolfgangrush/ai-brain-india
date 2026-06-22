@@ -1,0 +1,37 @@
+description = "🩺 Diagnose thermal / RAM state of the firm — charger plugged-in? · lite mode on or off? · pandoc installed? · memory pressure? · Python version? Use when the laptop feels hot, slow, or shuts down unexpectedly during drafting."
+
+prompt = """
+# 🩺 Doctor — India AI Brain
+
+The advocate said:
+
+\"\"\"
+{{args}}
+\"\"\"
+
+You are diagnosing the firm's runtime environment to help the advocate understand why their laptop may be hot, slow, or shutting down.
+
+## Step 1 — Run the diagnostic
+
+!{ailawfirm-india doctor}
+
+## Step 2 — Interpret the output for the advocate
+
+The doctor command reports:
+- **Lite mode** ON / OFF — opt-in mode for fanless 8GB Macs
+- **Charger** plugged in / on battery — battery + heavy CPU = shutdown risk
+- **pandoc** present / MISSING — needed for `.docx` generation
+- **Python** version
+- **Memory pressure** from `vm_stat`
+
+Translate any concerning signals into plain advice:
+
+- Charger on battery + heavy drafting session → tell advocate to plug in
+- pandoc MISSING → tell advocate to run `brew install pandoc` (macOS) or `sudo apt-get install -y pandoc` (Linux)
+- High memory pressure + lite mode OFF → suggest `ailawfirm-india lite on`
+- Lite mode ON + no recent finalize → remind advocate to batch-generate at session end
+
+## Step 3 — Offer next steps
+
+Based on the diagnosis, offer ONE concrete next move (don't list 5 options). Pick the highest-impact one.
+"""

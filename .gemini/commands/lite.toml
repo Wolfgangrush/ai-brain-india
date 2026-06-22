@@ -1,0 +1,49 @@
+description = "🔋 Toggle lite mode for low-RAM Macs (M1/M2 Air 8GB). Lite mode defers per-draft .docx generation (pandoc is the biggest CPU consumer per drafting turn on fanless 8GB Macs) and skips MCP autostart. Drafts saved as .md during the session; batch-generate via `ailawfirm-india finalize <matter>`. Opt-in — default behaviour unchanged."
+
+prompt = """
+# 🔋 Lite Mode — India AI Brain
+
+The advocate said:
+
+\"\"\"
+{{args}}
+\"\"\"
+
+You are toggling lite mode for the firm. Lite mode helps fanless 8GB Macs (M1/M2 Air) avoid thermal throttling during drafting sessions by deferring per-draft `.docx` generation. The `.docx` files are still produced — just batched later via `ailawfirm-india finalize <matter>`. Same content, same pandoc fidelity.
+
+## Step 1 — Detect the action
+
+Parse the advocate's message to determine: turn lite mode ON, turn it OFF, or just check current state.
+
+- Phrases like "lite on", "enable lite", "low-ram mode on" → action = on
+- Phrases like "lite off", "disable lite", "normal mode" → action = off
+- Phrases like "is lite on?", "status", "what mode" → action = (none) → just show state
+
+## Step 2 — Run the command
+
+If action = on:
+!{ailawfirm-india lite on}
+
+If action = off:
+!{ailawfirm-india lite off}
+
+If no action (status check):
+!{ailawfirm-india lite}
+
+## Step 3 — Report
+
+Tell the advocate what changed. If lite is now ON, remind them:
+
+> Lite mode ON. Drafts will save as `.md` only during the session.
+> When ready to file or email, batch-generate `.docx`:
+>
+>     ailawfirm-india finalize <matter-folder>
+
+If lite is now OFF, tell them per-draft pairing is back to normal.
+
+## Why lite mode exists
+
+On a fanless 8GB Mac (M1/M2 Air), pandoc subprocess on every drafting turn is the largest CPU consumer. Batched generation at end of session produces bit-identical `.docx` (pandoc is deterministic for the same input) with one CPU burst instead of per-keystroke heat.
+
+Lite mode is OPT-IN. Default behaviour is unchanged.
+"""
