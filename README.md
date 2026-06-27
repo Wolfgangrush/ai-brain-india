@@ -1,3 +1,17 @@
+<div align="center">
+  <img src="docs/banner.png" width="820" alt="AI Brain India banner"/>
+  <p><strong>Practice brain for India attorneys — local-first, offline-capable, built for sovereignty.</strong></p>
+  <p><a href="https://wolfgangrush.github.io">Visit the live site</a></p>
+</div>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License"/>
+  <img src="https://img.shields.io/badge/status-alpha-yellow" alt="Status: Alpha"/>
+  <img src="https://img.shields.io/badge/local--first-true-forestgreen" alt="Local-first"/>
+  <img src="https://img.shields.io/badge/AI-legal--grade-8A2BE2" alt="AI: Legal-grade"/>
+</p>
+
+
 # 🇮🇳 AI Brain for India Lawyers
 
 > **Free practice OS for every Indian solo advocate. Terminal-native. Local-first by default (Ollama + Qwen3 — nothing leaves your laptop). Cloud-LLM optional with the [Pseudonymisation Gateway](https://github.com/Wolfgangrush/pseudonymisation-gateway) sanitising PII before any prompt leaves the machine. Built by an Indian advocate, for Indian advocates.**
